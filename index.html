@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Device Locked</title>
+    <style>
+        body {
+            background-color: black;
+            color: lime;
+            font-family: "Courier New", monospace;
+            padding: 20px;
+            text-align: center;
+        }
+        #device-frame {
+            width: 250px;
+            height: 450px;
+            margin: 20px auto;
+            background-color: #111;
+            border: 15px solid gray;
+            border-radius: 30px;
+            box-shadow: 0 0 20px lime;
+            overflow: hidden;
+            position: relative;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .locked-animation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .lock-icon {
+            font-size: 80px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+        .unlock-instruction {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .unlock-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: lime;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            animation: glow 2s infinite;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px lime; }
+            50% { box-shadow: 0 0 20px lime; }
+            100% { box-shadow: 0 0 5px lime; }
+        }
+        #status {
+            margin: 10px 0;
+        }
+        #progress {
+            width: 70%;
+            height: 20px;
+            background-color: #444;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px auto;
+        }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: lime;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔓 Akses Ke Server HP Target</h1>
+<p>📂 Masukkan Nomor/User ID Target Device:</p>
+<input type="text" id="device-number" placeholder="Masukkan nomor atau user id target" style="padding: 8px; width: 255px; text-align: center;">
+<br>
+<button onclick="verifyDevice()" style="padding: 8px 15px; width: 270px; cursor: pointer; margin-top: 10px;">🔍 Deteksi Device Target</button>
+<p id="status"></p>
+<div id="progress"><div id="progress-bar"></div></div>
+
+<div id="device-frame">
+    <div class="locked-animation">
+        <div class="lock-icon">🔒</div>
+        <h2>Device Locked</h2>
+        <p class="unlock-instruction">Gunakan Data Token untuk membuka akses ke perangkat target.</p>
+        <button class="unlock-button" onclick="requestTokenAccess()">🔓 Gunakan Data Token</button>
+    </div>
+</div>
+
+<script>
+    function verifyDevice() {
+        const rawInput = document.getElementById("device-number").value;
+		const deviceNumber = rawInput.trim().replace(/\D/g, ''); // bersihkan input
+        const status = document.getElementById("status");
+        const validNumber = /^\d{10,13}$/;
+        const progressBar = document.getElementById("progress-bar");
+        const deviceFrame = document.getElementById("device-frame");
+
+        if (validNumber.test(deviceNumber)) {
+            status.textContent = `✅ Mencari Perangkat untuk: ${deviceNumber}...`;
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    deviceFrame.style.display = "flex";
+                    status.textContent = "🔒 Perangkat Sudah Di Temukan";
+                } else {
+                    width++;
+                    progressBar.style.width = width + "%";
+                }
+            }, 35);
+        } else {
+            status.textContent = "❌ Nomor tidak valid! Masukkan nomor telepon yang benar (10-13 digit).";
+        }
+    }
+
+    function requestTokenAccess() {
+        const status = document.getElementById("status");
+        status.textContent = "⚠️ Silakan isi Data Token terlebih dahulu untuk mengakses file-file perangkat target.";
+    }
+</script>
+
+</body>
+</html>
